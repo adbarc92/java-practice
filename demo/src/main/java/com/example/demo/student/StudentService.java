@@ -1,15 +1,32 @@
 package com.example.demo.student;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
+
+  private final StudentRepository studentRepository;
+
+  @Autowired
+  public StudentService(StudentRepository studentRepository) {
+    this.studentRepository = studentRepository;
+  }
+
   public List<Student> getStudents() {
-    return List.of(
-        new Student(1L, "Miriam", "miriam.jamal@gmail.com", LocalDate.of(2000, Month.JANUARY, 5), 21));
+    return studentRepository.findAll();
+  }
+
+  public Student addNewStudent(Student student) {
+    Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
+    if (studentOptional.isPresent()) {
+      // TODO: write custom exceptions
+      throw new IllegalStateException("email taken");
+    } else {
+      return studentRepository.save(student);
+    }
   }
 }

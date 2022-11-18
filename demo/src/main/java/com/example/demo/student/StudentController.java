@@ -5,11 +5,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
@@ -36,12 +38,22 @@ public class StudentController {
 
   @PostMapping
   public Student registerNewStudent(@RequestBody Student student) {
-    return studentService.addNewStudent(student);
+    return studentService.saveStudent(student);
   }
 
   @DeleteMapping(path = "{studentId}")
   public void deleteStudent(@PathVariable("studentId") Long id) {
     studentService.deleteStudent(id);
+  }
+
+  @PatchMapping
+  public Student patchStudent(@RequestBody Student student) {
+    return studentService.saveStudent(student);
+  }
+
+  @PutMapping(value = "{studentId}")
+  public Student putStudent(@PathVariable("studentId") Long id, @RequestBody Student student) {
+    return studentService.updateStudent(id, student);
   }
 
 }
